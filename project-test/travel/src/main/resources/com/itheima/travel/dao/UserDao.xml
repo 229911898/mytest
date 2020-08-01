@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.travel.dao.UserDao">
+    <select id="findByUsername" parameterType="string" resultType="user">
+        select * from tab_user where username=#{username}
+    </select>
+
+    <select id="finByTelephone" parameterType="string" resultType="user">
+        select * from tab_user where telephone=#{telephone}
+    </select>
+
+    <insert id="save" parameterType="user">
+        insert into tab_user (username,password,telephone) values (#{username},#{password},#{telephone})
+    </insert>
+    
+    <select id="findByUid" parameterType="int" resultType="user">
+        select * from tab_user where uid=#{uid}
+    </select>
+
+    <update id="update" parameterType="user">
+        update tab_user
+        <set>
+            <if test="nickname!=null and nickname!=''">
+                nickname=#{nickname},
+            </if>
+
+            <if test="sex!=null and sex!=''">
+                sex=#{sex},
+            </if>
+
+            <if test="birthday!=null and birthday!=''">
+                birthday=#{birthday},
+            </if>
+
+            <if test="email!=null and email!=''">
+                email=#{email},
+            </if>
+
+            <if test="pic!=null and pic!=''">
+                pic=#{pic}
+            </if>
+        </set>
+        where uid=#{uid}
+    </update>
+</mapper>

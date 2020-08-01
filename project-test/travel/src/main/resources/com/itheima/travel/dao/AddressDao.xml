@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.travel.dao.AddressDao">
+    <select id="findAllByUid" parameterType="int" resultType="address">
+        select * from tab_address where uid=#{uid}
+    </select>
+
+    <insert id="save" parameterType="address">
+        insert into tab_address(contact,address,telephone,uid) values (#{contact},#{address},#{telephone},${user.uid})
+    </insert>
+
+    <select id="findByAid" parameterType="int" resultType="address">
+        select * from tab_address where aid=#{aid}
+    </select>
+
+    <delete id="delete" parameterType="int">
+        delete from tab_address where aid=#{aid}
+    </delete>
+
+    <update id="update" parameterType="address">
+        update tab_address
+        <set>
+            <if test="contact!=null and contact!=''">
+                contact=#{contact},
+            </if>
+
+            <if test="address!=null and address!=''">
+                address=#{address},
+            </if>
+
+            <if test="telephone!=null and telephone!=''">
+                telephone=#{telephone},
+            </if>
+
+            <if test="isdefault!=null and isdefault!=''">
+                isdefault=#{isdefault}
+            </if>
+        </set>
+        where aid=#{aid}
+    </update>
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.travel.dao.RouteDao">
+    <select id="findCount" resultType="int">
+        select count(*) from tab_route
+        <where>
+            <if test="cid!=null and cid!=''">
+                cid=#{cid}
+            </if>
+
+            <if test="rname!=null and rname!=''">
+               and rname like concat(concat('%',#{rname}),'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="findByPage" resultType="route">
+        select * from tab_route
+        <where>
+            <if test="cid!=null and cid!=''">
+                cid=#{cid}
+            </if>
+
+            <if test="rname!=null and rname!=''">
+                and rname like concat(concat('%',#{rname}),'%')
+            </if>
+        </where>
+        limit #{startIndex},#{pageSize}
+    </select>
+
+    <!--多表嵌套查询-->
+    <resultMap id="routeDetailMap" type="route">
+        <id column="rid" property="rid"/>
+        <!--线路表一对一-->
+        <association property="category" javaType="category"
+                     select="com.itheima.travel.dao.CategoryDao.findByCid" column="cid">
+        </association>
+        <!--商家信息表一对一-->
+        <association property="seller" javaType="seller"
+                     select="com.itheima.travel.dao.SellerDao.findBySid" column="sid">
+        </association>
+        <!--线路图片表一对多-->
+        <collection property="routeImgList" ofType="routeImg"
+                    select="com.itheima.travel.dao.RouteImgDao.findByRid" column="rid">
+        </collection>
+    </resultMap>
+
+    <select id="findByDetail" parameterType="java.lang.String" resultMap="routeDetailMap">
+        select * from tab_route where rid=#{rid}
+    </select>
+
+    <!--嵌套查询-->
+    <resultMap id="findByRidMap" type="route">
+        <id column="rid" property="rid"/>
+        <association property="seller" javaType="seller"
+                     select="com.itheima.travel.dao.SellerDao.findBySid" column="sid">
+        </association>
+    </resultMap>
+    <select id="findByRid" parameterType="int" resultMap="findByRidMap">
+        select * from tab_route where rid=#{rid}
+    </select>
+</mapper>

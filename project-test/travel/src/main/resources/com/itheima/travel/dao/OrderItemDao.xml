@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.travel.dao.OrderItemDao">
+    <insert id="save" parameterType="orderItem">
+        insert into tab_orderitem (itemtime,state,num,subtotal,rid,oid) values (#{itemtime},#{state},#{num},#{subtotal},#{route.rid},#{oid})
+    </insert>
+
+    <update id="updateState" parameterType="java.lang.String">
+        update tab_orderitem set state=1 where oid=#{oid}
+    </update>
+
+    <!--嵌套查询-->
+    <resultMap id="findByOidMap" type="orderItem">
+        <id column="itemid" property="itemid"/>
+        <!--一对一关系-->
+        <association property="route" javaType="route"
+                     select="com.itheima.travel.dao.RouteDao.findByRid" column="rid">
+        </association>
+    </resultMap>
+
+    <select id="findByOid" parameterType="java.lang.String" resultMap="findByOidMap">
+        select * from tab_orderitem where oid=#{oid}
+    </select>
+</mapper>

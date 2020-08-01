@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.itheima.travel.dao.OrderDao">
+    <insert id="save" parameterType="order">
+        insert into tab_order values (#{oid},#{ordertime},#{total},#{state},#{address},#{contact},#{telephone},#{user.uid})
+    </insert>
+
+    <select id="findByOid" parameterType="java.lang.String" resultType="order">
+        select * from tab_order where oid=#{oid}
+    </select>
+
+    <update id="updateState" parameterType="java.lang.String">
+        update tab_order set state=1 where oid=#{oid}
+    </update>
+
+    <select id="findCount" resultType="int">
+        select count(*) from tab_order
+        <where>
+            <if test="state==2">
+                and uid=#{uid}
+            </if>
+
+            <if test="state==1">
+                state=#{state} and uid=#{uid}
+            </if>
+
+            <if test="state==0">
+                state=#{state} and uid=#{uid}
+            </if>
+        </where>
+    </select>
+
+    <!--嵌套查询-->
+    <resultMap id="findByPageMap" type="order">
+        <result column="oid" property="oid"/>
+        <!--一对多关系-->
+        <collection property="orderItemList" ofType="orderItem"
+                    select="com.itheima.travel.dao.OrderItemDao.findByOid" column="oid">
+        </collection>
+    </resultMap>
+
+    <select id="findByPage" resultMap="findByPageMap">
+        select * from tab_order
+        <where>
+            <if test="state==2">
+                and uid=#{uid}
+            </if>
+            <if test="state==1">
+                state=#{state} and uid=#{uid}
+            </if>
+            <if test="state==0">
+                state=#{state} and uid=#{uid}
+            </if>
+        </where>
+        limit #{startIndex},#{pageSize}
+    </select>
+</mapper>
