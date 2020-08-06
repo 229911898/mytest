@@ -21,10 +21,10 @@ public class SmsUtils {
     static final String domain = "dysmsapi.aliyuncs.com";
 
     // 需开发者指定
-    private static String accessKeyId = "LTAI4GKxDrdtBPqEZTXnDwLS";
+    private static String accessKeyId = "需开发者指定";
 
     // 需开发者指定
-    private static String accessKeySecret = "n1FC6Vhof2E4QtxiFDQWzgD4MSF5QE";
+    private static String accessKeySecret = "需开发者指定";
 
     /**
      * 调用阿里云平台发送短信
